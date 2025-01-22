@@ -3,39 +3,38 @@ import streamlit as st
 import uuid
 from pathlib import Path
 import json
-from huggingface_hub import CommitScheduler
+#from huggingface_hub import CommitScheduler
 from datetime import datetime
 
-# Configure logging
-log_file = Path("logs/") / f"data_{uuid.uuid4()}.json"
-log_folder = log_file.parent
-log_folder.mkdir(parents=True, exist_ok=True)  # Ensure the folder exists
+# # Configure logging
+# log_file = Path("logs/") / f"data_{uuid.uuid4()}.json"
+# log_folder = log_file.parent
+# log_folder.mkdir(parents=True, exist_ok=True)  # Ensure the folder exists
 
-# Initialize CommitScheduler
-scheduler = CommitScheduler(
-    repo_id="Research-to-Product-logs",
-    repo_type="dataset",
-    folder_path=log_folder,
-    path_in_repo="data",
-    every=2  # Commit logs every 2 entries
-)
+# # Initialize CommitScheduler
+# scheduler = CommitScheduler(
+#     repo_id="Research-to-Product-logs",
+#     repo_type="dataset",
+#     folder_path=log_folder,
+#     path_in_repo="data",
+#     every=2  # Commit logs every 2 entries
+# )
 
 def predict(query, file_path, task):
 
-    with scheduler.lock:
-        with log_file.open("a") as f:
-            f.write(json.dumps(
-                {
-                    'query': query,
-                    "task": task,
-                    #"response": response,
-                    "file_name": file_name,
-                    "timestamp": datetime.now().isoformat()  # Add timestamp
-                    #'model_response': prediction
-                }
-            ))
-            f.write("\n")
-            
+    # with scheduler.lock:
+    #     with log_file.open("a") as f:
+    #         f.write(json.dumps(
+    #             {
+    #                 'query': query,
+    #                 "task": task,
+    #                 #"response": response,
+    #                 "file_name": file_name,
+    #                 "timestamp": datetime.now().isoformat()  # Add timestamp
+    #                 #'model_response': prediction
+    #             }
+    #         ))
+    #         f.write("\n")       
     return f" file_path:'{file_path}' query: '{query}' task: '{task}' "
 
     
