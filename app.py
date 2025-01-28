@@ -8,26 +8,22 @@ from google.oauth2 import service_account
 
 def process_pdf(pdf_path):
   # Load credentials from Azure environment variable
-  # credentials_info = json.loads(os.environ["GCP_SERVICE_ACCOUNT_KEY"])
-  # credentials = service_account.Credentials.from_service_account_info(credentials_info)
-
-  credentials = service_account.Credentials.from_service_account_file(
-        '/content/drive/MyDrive/Pytesseract/read_img_GoogleVisionAPI/sa_Key_clientfile_VisionAI.json'
-    )
+  credentials_info = json.loads(os.environ["GCP_SERVICE_ACCOUNT_KEY"])
+  credentials = service_account.Credentials.from_service_account_info(credentials_info)
 
   # Initialize Google Document AI Client
   client = documentai.DocumentProcessorServiceClient(credentials=credentials)
 
   # Define Google Document AI processor
-  # project_id = "your-gcp-project-id"
-  # location = "us"  # Adjust if needed
-  # processor_id = "your-processor-id"
-  #processor_name = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
+  project_id = "myfirstocrvisionproject"
+  location = "us"  # Adjust if needed
+  processor_id = "7670b830a0fd8325"
+  processor_name = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
 
-  processor_name = f"projects/myfirstocrvisionproject/locations/us/processors/7670b830a0fd8325"
-
+  prediction_endpoint="https://us-documentai.googleapis.com/v1/projects/261324698708/locations/us/processors/7670b830a0fd8325:process"
+  
   # Load PDF file from local or Azure Blob Storage
-  with open(pdf_path, "rb") as file:
+  with open("pdf_path", "rb") as file:
       raw_document = documentai.RawDocument(content=file.read(), mime_type="application/pdf")
 
   # Send document for processing
