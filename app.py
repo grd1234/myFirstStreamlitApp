@@ -6,6 +6,24 @@ from datetime import datetime
 from google.cloud import documentai_v1 as documentai
 from google.oauth2 import service_account
 
+def save_uploaded_file(file_path):
+  
+    UPLOAD_DIR = "./saved_uploads"
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+    """Saves the uploaded file to a permanent location."""
+    if not file_path:
+        return None, "No file uploaded!"
+
+    # Extract filename from the uploaded path
+    filename = os.path.basename(file_path)
+    saved_file_path = os.path.join(UPLOAD_DIR, filename)
+
+    # Copy the uploaded file to the permanent directory
+    shutil.copy(file_path, saved_file_path)
+    return saved_file_path, f"File saved at: {saved_file_path}"
+  
+
 def process_pdf(pdf_path):
   # Load credentials from Azure environment variable
   credentials_info = json.loads(os.environ["GCP_SERVICE_ACCOUNT_KEY"])
@@ -32,9 +50,12 @@ def process_pdf(pdf_path):
 
   # Print extracted text
   print(result.document.text)
+  
 
 def predict(query, file_path, task):
-  document_text = process_pdf(file_path)
+  # Save the uploaded file to local directory
+  saved_file_path, save_msg = save_uploaded_file(file_path)
+  document_text = process_pdf(saved_file_path)
   return f"document_text:{document_text} \n\n\nfile_path:'{file_path}' query: '{query}' task: '{task}'  "
 
 
