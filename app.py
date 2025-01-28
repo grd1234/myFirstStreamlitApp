@@ -20,7 +20,7 @@ def process_pdf(pdf_path):
   processor_id = "7670b830a0fd8325"
   processor_name = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
 
-  prediction_endpoint="https://us-documentai.googleapis.com/v1/projects/261324698708/locations/us/processors/7670b830a0fd8325:process"
+  #prediction_endpoint="https://us-documentai.googleapis.com/v1/projects/261324698708/locations/us/processors/7670b830a0fd8325:process"
   
   # Load PDF file from local or Azure Blob Storage
   with open("pdf_path", "rb") as file:
