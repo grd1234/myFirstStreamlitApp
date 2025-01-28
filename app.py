@@ -7,17 +7,19 @@ from google.cloud import documentai_v1 as documentai
 from google.oauth2 import service_account
 
 def save_uploaded_file(uploaded_file):
-    """Saves the uploaded file to a local directory and returns the path."""
+    """Saves the uploaded file to a local directory and returns the file path."""
     UPLOAD_DIR = "./saved_uploads"
     os.makedirs(UPLOAD_DIR, exist_ok=True)
 
     if uploaded_file is None:
         return None, "No file uploaded!"
 
-    # Save the file locally
+    # Define the file path where the uploaded file will be saved
     saved_file_path = os.path.join(UPLOAD_DIR, uploaded_file.name)
+
+    # Save the uploaded file
     with open(saved_file_path, "wb") as f:
-        f.write(uploaded_file.read())
+        f.write(uploaded_file.getbuffer())
 
     return saved_file_path, f"File saved at: {saved_file_path}"
 
@@ -32,7 +34,7 @@ def process_pdf(pdf_path):
 
     # Define Google Document AI processor
     project_id = "myfirstocrvisionproject"
-    location = "us"  # Adjust if needed
+    location = "us"
     processor_id = "7670b830a0fd8325"
     processor_name = f"projects/{project_id}/locations/{location}/processors/{processor_id}"
 
@@ -52,7 +54,7 @@ def predict(query, uploaded_file, task):
     if uploaded_file is None:
         return "No file uploaded!"
 
-    # Save uploaded file
+    # Save uploaded file locally
     saved_file_path, save_msg = save_uploaded_file(uploaded_file)
 
     # Process PDF and extract text
@@ -60,7 +62,7 @@ def predict(query, uploaded_file, task):
 
     return f"Extracted Text:\n{document_text}\n\nFile Path: '{saved_file_path}'\nQuery: '{query}'\nTask: '{task}'"
 
-# Define the Streamlit UI
+# Streamlit UI
 st.title("Research Paper Processor")
 st.write("Upload a PDF, enter your query, and choose a task.")
 
@@ -88,10 +90,7 @@ if st.button("Submit"):
     elif not query_input_txt.strip():
         st.error("Please enter a query.")
     else:
-        # Simulating the predict function call
         with st.spinner("Processing..."):
             response = predict(query_input_txt, file_upload, task_selection)
             st.text_area("Model Response", response, height=150)
-
-            # Log the data
             st.success("Query processed and logged successfully.")
